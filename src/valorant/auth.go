@@ -22,6 +22,7 @@ var (
 		CipherSuites: []uint16{tls.TLS_AES_128_GCM_SHA256},
 		MinVersion:   tls.VersionTLS13,
 	}
+	userRegion = ""
 )
 
 // Custom TLS dialer - Credit to fyraux (https://github.com/fyraux/go-rso)
@@ -68,7 +69,7 @@ func parseCookies(cookies []string, subs string) (string, error) {
 	return "", fmt.Errorf("could not find %s", subs)
 }
 
-func getTokens(uri string) (*ParsedUri, error) {
+func getTokens(uri string) (*ParsedUriResp, error) {
 	parsedUrl, err := url.Parse(uri)
 	if err != nil {
 		return nil, err
@@ -81,7 +82,7 @@ func getTokens(uri string) (*ParsedUri, error) {
 	id_token := query.Get("id_token")
 	expires_in := query.Get("expires_in")
 
-	return &ParsedUri{
+	return &ParsedUriResp{
 		AccessToken: access_token,
 		IdToken:     id_token,
 		ExpiresIn:   expires_in,
@@ -103,7 +104,7 @@ func handshake() (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-	body := new(HandshakeRespBody)
+	body := new(HandshakeResp)
 	json.NewDecoder(resp.Body).Decode(body)
 	cookie, err := parseCookies(resp.Header["Set-Cookie"], "asid")
 	if err != nil {
@@ -113,10 +114,10 @@ func handshake() (string, error) {
 	return cookie, nil
 }
 
-func login(username, password string) (*ParsedUri, string, error) {
+func login(username, password string) (*ParsedUriResp, string, error) {
 	resp, err := httpRequest(http.MethodPut,
 		"https://auth.riotgames.com/api/v1/authorization",
-		LoginBody{
+		LoginReqBody{
 			Type:        "auth",
 			Username:    username,
 			Password:    password,
@@ -126,7 +127,7 @@ func login(username, password string) (*ParsedUri, string, error) {
 		return nil, "", err
 	}
 	defer resp.Body.Close()
-	body := new(LoginRespBody)
+	body := new(LoginResp)
 	json.NewDecoder(resp.Body).Decode(body)
 
 	parsedUri, err := getTokens(body.Response.Parameters.Uri)
@@ -151,7 +152,7 @@ func getEntitlements() (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-	body := new(EntitlementsRespBody)
+	body := new(EntitlementsResp)
 	json.NewDecoder(resp.Body).Decode(body)
 	token := body.Token
 
@@ -167,7 +168,7 @@ func getUserInfo() (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-	body := new(UserInfoRespBody)
+	body := new(UserInfoResp)
 	json.NewDecoder(resp.Body).Decode(body)
 
 	return body.UserId, nil
@@ -184,7 +185,7 @@ func getRegion(id_token string) (string, error) {
 		return "", nil
 	}
 	defer resp.Body.Close()
-	body := new(RegionRespBody)
+	body := new(RegionResp)
 	json.NewDecoder(resp.Body).Decode(body)
 
 	return body.Affinities.Live, nil
@@ -204,6 +205,7 @@ func Authentication(username, password string) (string, string, http.Header) {
 	authHeaders.Set("Cookie", cookie)
 	authHeaders.Set("Authorization", "Bearer " + parsedUri.AccessToken)
 	region, err := getRegion(parsedUri.IdToken)
+	userRegion = region
 	if err != nil {
 		return "", "", nil
 	}

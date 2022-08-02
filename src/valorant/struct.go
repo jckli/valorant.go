@@ -1,5 +1,6 @@
 package valorant
 
+// auth structs
 type HandshakeReqBody struct {
 	ClientID string `json:"client_id"`
 	Nonce int `json:"nonce"`
@@ -8,18 +9,18 @@ type HandshakeReqBody struct {
 	Scope string `json:"scope"`
 }
 
-type HandshakeRespBody struct {
+type HandshakeResp struct {
 	Type string `json:"type"`
 	Country string `json:"country"`
 }
 
-type LoginBody struct {
+type LoginReqBody struct {
 	Type string `json:"type"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type LoginRespBody struct {
+type LoginResp struct {
 	Type string `json:"type"`
 	Response struct {
 		Mode string `json:"mode"`
@@ -30,17 +31,17 @@ type LoginRespBody struct {
 	Country string `json:"country"`
 }
 
-type ParsedUri struct {
+type ParsedUriResp struct {
 	AccessToken string `json:"access_token"`
 	IdToken string `json:"id_token"`
 	ExpiresIn string `json:"expires_in"`
 }
 
-type EntitlementsRespBody struct {
+type EntitlementsResp struct {
 	Token string `json:"entitlements_token"`
 }
 
-type UserInfoRespBody struct {
+type UserInfoResp struct {
 	Country string `json:"country"`
 	UserId string `json:"sub"`
 	EmailVerified bool `json:"email_verified"`
@@ -74,7 +75,7 @@ type RegionReqBody struct {
 	IdToken string `json:"id_token"`
 }
 
-type RegionRespBody struct {
+type RegionResp struct {
 	PasToken string `json:"token"`
 	Affinities struct {
 		Pbe string `json:"pbe"`
