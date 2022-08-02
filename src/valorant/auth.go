@@ -88,7 +88,7 @@ func getTokens(uri string) (*ParsedUri, error) {
 	}, nil
 }
 
-func Handshake() (string, error) {
+func handshake() (string, error) {
 	resp, err := httpRequest(http.MethodPost, 
 		"https://auth.riotgames.com/api/v1/authorization", 
 		HandshakeReqBody{
@@ -113,7 +113,7 @@ func Handshake() (string, error) {
 	return cookie, nil
 }
 
-func Login(username, password string) (*ParsedUri, string, error) {
+func login(username, password string) (*ParsedUri, string, error) {
 	resp, err := httpRequest(http.MethodPut,
 		"https://auth.riotgames.com/api/v1/authorization",
 		LoginBody{
@@ -173,28 +173,49 @@ func getUserInfo() (string, error) {
 	return body.UserId, nil
 }
 
-func Authentication(username, password string) (string, http.Header) {
-	authHeaders = defaultHeaders.Clone()
-	cookie, err := Handshake()
+func getRegion(id_token string) (string, error) {
+	resp, err := httpRequest(http.MethodPut,
+		"https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant",
+		RegionReqBody{
+			IdToken: id_token,
+		},
+	)
 	if err != nil {
 		return "", nil
 	}
-	authHeaders.Set("Cookie", cookie)
-	parsedUri, cookie, err := Login(username, password)
+	defer resp.Body.Close()
+	body := new(RegionRespBody)
+	json.NewDecoder(resp.Body).Decode(body)
+
+	return body.Affinities.Live, nil
+}
+
+func Authentication(username, password string) (string, string, http.Header) {
+	authHeaders = defaultHeaders.Clone()
+	cookie, err := handshake()
 	if err != nil {
-		return "", nil
+		return "", "", nil
+	}
+	authHeaders.Set("Cookie", cookie)
+	parsedUri, cookie, err := login(username, password)
+	if err != nil {
+		return "", "", nil
 	}
 	authHeaders.Set("Cookie", cookie)
 	authHeaders.Set("Authorization", "Bearer " + parsedUri.AccessToken)
+	region, err := getRegion(parsedUri.IdToken)
+	if err != nil {
+		return "", "", nil
+	}
 	token, err := getEntitlements()
 	if err != nil {
-		return "", nil
+		return "", "", nil
 	}
 	authHeaders.Set("X-Riot-Entitlements-JWT", token)
 	userId, err := getUserInfo()
 	if err != nil {
-		return "", nil
+		return "", "", nil
 	}
 
-	return userId, authHeaders
+	return userId, region, authHeaders
 }

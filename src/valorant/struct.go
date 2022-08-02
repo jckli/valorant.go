@@ -50,7 +50,7 @@ type UserInfoRespBody struct {
 		CngAt int `json:"cng_at"`
 		Reset bool `json:"reset"`
 		MustReset bool `json:"must_reset"`
-	}
+	} `json:"pw"`
 	PhoneNumberVerified bool `json:"phone_number_verified"`
 	AccountVerified bool `json:"account_verified"`
 	Ppid string `json:"ppid"`
@@ -62,10 +62,22 @@ type UserInfoRespBody struct {
 		GameName string `json:"game_name"`
 		TagLine string `json:"tag_line"`
 		CreatedAt int `json:"created_at"`
-	}
+	} `json:"acct"`
 	Age int `json:"age"`
 	Jti string `json:"jti"`
 	Affinity struct {
 		Pp string `json:"pp"`
-	}
+	} `json:"affinity"`
+}
+
+type RegionReqBody struct {
+	IdToken string `json:"id_token"`
+}
+
+type RegionRespBody struct {
+	PasToken string `json:"token"`
+	Affinities struct {
+		Pbe string `json:"pbe"`
+		Live string `json:"live"`
+	} `json:"affinities"`
 }
