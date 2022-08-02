@@ -82,3 +82,60 @@ type RegionResp struct {
 		Live string `json:"live"`
 	} `json:"affinities"`
 }
+
+// contracts structs
+type ContractDefinitionsResp struct {
+	Definitions []struct {
+		Id string `json:"ID"`
+		Item struct {
+			ItemTypeId string `json:"ItemTypeID"`
+			ItemId string `json:"ItemID"`
+		} `json:"Item"`
+		RequiredEntitlement struct {
+			ItemTypeId string `json:"ItemTypeID"`
+			ItemId string `json:"ItemID"`
+		} `json:"RequiredEntitlement"`
+		ProgressionSchedule struct {
+			Name string `json:"Name"`
+			ProgressionCurrencyId string `json:"ProgressionCurrencyID"`
+			ProgressionDeltaPerLevel []int `json:"ProgressionDeltaPerLevel"`
+		} `json:"ProgressionSchedule"`
+		RewardSchedule struct {
+			Id string `json:"ID"`
+			Name string `json:"Name"`
+			Prerequisites interface{} `json:"Prerequisites"`
+			RewardsPerLevel []struct {
+				EntitlementRewards []struct {
+					ItemTypeId string `json:"ItemTypeID"`
+					ItemId string `json:"ItemID"`
+					Amount int `json:"Amount"`
+				} `json:"EntitlementRewards"`
+				WalletRewards interface{} `json:"WalletRewards"`
+				CounterRewards interface{} `json:"CounterRewards"`
+			} `json:"RewardsPerLevel"`
+		} `json:"RewardSchedule"`
+		Sidegrades []struct {
+			SidegradeId string `json:"SidegradeID"`
+			Options []struct {
+				Optionid string `json:"OptionID"`
+				Cost struct {
+					WalletCosts []struct {
+						CurrencyId string `json:"CurrencyID"`
+						AmountToDeduct int `json:"AmountToDeduct"`
+					} `json:"WalletCosts"`
+				} `json:"Cost"`
+				Rewards []struct {
+					ItemTypeId string `json:"ItemTypeID"`
+					ItemId string `json:"ItemID"`
+					Amount int `json:"Amount"`
+				} `json:"Rewards"`
+			} `json:"Options"`
+			Prerequisites struct {
+				RequiredEntitlements []struct {
+					ItemTypeId string `json:"ItemTypeID"`
+					ItemId string `json:"ItemID"`
+				} `json:"RequiredEntitlements"`
+			} `json:"Prerequisites"`
+		} `json:"Sidegrades"`
+	} `json:"Definitions"`
+}
