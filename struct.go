@@ -186,3 +186,76 @@ type ContractFetchResp struct {
 		WeeklyRefillTime string `json:"WeeklyRefillTime"`
 	} `json:"MissionsMetadata"`
 }
+
+// coregame structs
+type CoregameFetchPlayerResp struct {
+	Subject string `json:"Subject"`
+	MatchId string `json:"MatchID"`
+	Versioon int `json:"Version"`
+}
+
+type CoregameFetchMatchResp struct {
+	MatchId string `json:"MatchID"`
+	Version int `json:"Version"`
+	State string `json:"State"`
+	MapId string `json:"MapID"`
+	ModeId string `json:"ModeID"`
+	ProvisioningFlow string `json:"ProvisioningFlow"`
+	GamePodId string `json:"GamePodID"`
+	AllMucName string `json:"AllMUCName"`
+	TeamMucTame string `json:"TeamMUCTame"`
+	TeamVoiceId string `json:"TeamVoiceID"`
+	IsReconnectable bool `json:"IsReconnectable"`
+	ConnectionDetails struct {
+		GameServerHosts []string
+		GameServerHost string `json:"GameServerHost"`
+		GameServerPort int `json:"GameServerPort"`
+		GameServerObfuscatedIp int `json:"GameServerObfuscatedIP"`
+		GameClientHash int `json:"GameClientHash"`
+		PlayerKey string `json:"PlayerKey"`
+	} `json:"ConnectionDetails"`
+	PostGameDetails interface{} `json:"PostGameDetails"`
+	Players []struct {
+		Subject string `json:"Subject"`
+		TeamId string `json:"TeamID"`
+		CharacterId string `json:"CharacterID"`
+		PlayerIdentity struct {
+			Subject string `json:"Subject"`
+			PlayerCardId string `json:"PlayerCardID"`
+			PlayerTitleId string `json:"PlayerTitleID"`
+			AccountLevel int `json:"AccountLevel"`
+			PreferredLevelBorderId string `json:"PreferredLevelBorderID"`
+			Incognito bool `json:"Incognito"`
+			HideAccountLevel bool `json:"HideAccountLevel"`
+		} `json:"PlayerIdentity"`
+		SeasonalBadgeInfo struct {
+			SeasonId string `json:"SeasonID"`
+			NumberOfWins int `json:"NumberOfWins"`
+			WinsByTier interface{} `json:"WinsByTier"`
+			Rank int `json:"Rank"`
+			LeaderboardRank int `json:"LeaderboardRank"`
+		} `json:"SeasonalBadgeInfo"`
+		IsCoach bool `json:"IsCoach"`
+		IsAssociated bool `json:"IsAssociated"`
+	} `json:"Players"`
+	MatchmakingData struct{
+		QueueId string `json:"QueueID"`
+		IsRanked bool `json:"IsRanked"`
+	} `json:"MatchmakingData"`
+}
+
+type CoregameFetchMatchLoadoutsResp struct {
+	Loadouts []struct {
+		CharacterId string `json:"CharacterID"`
+		Loadout struct {
+			Sprays struct {
+				SpraySelections []struct {
+					SocketId string `json:"SocketID"`
+					SprayId string `json:"SprayID"`
+					LevelId string `json:"LevelID"`
+				} `json:"SpraySelections"`
+			} `json:"Sprays"`
+			Items interface{} `json:"Items"`
+		} `json:"Loadout"`
+	} `json:"Loadouts"`
+}
