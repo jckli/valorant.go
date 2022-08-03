@@ -95,6 +95,7 @@ func Coregame_fetchPlayer(puuid string) (string, error) {
 	return body.MatchId, nil
 }
 
+// POST CoreGame_DisassociatePlayer
 func Coregame_disassociatePlayer(puuid, match_id string) (*CoregameFetchPlayerResp, error) {
 	url := "/core-game/v1/players/" + puuid + "/disassociate/" + match_id
 	resp, err := fetchP(http.MethodPost, url, "glz", nil)
