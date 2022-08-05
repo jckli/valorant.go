@@ -259,3 +259,95 @@ type CoregameFetchMatchLoadoutsResp struct {
 		} `json:"Loadout"`
 	} `json:"Loadouts"`
 }
+
+// pregame structs
+type PregameFetchPlayerResp struct {
+	Subject string `json:"Subject"`
+	MatchId string `json:"MatchID"`
+	Version int `json:"Version"`
+}
+
+type PregameFetchMatchResp struct {
+	Id string `json:"ID"`
+	Version int `json:"Version"`
+	Teams []struct {
+		TeamId string `json:"TeamID"`
+		Players []struct {
+			Subject string `json:"Subject"`
+			CharacterId string `json:"CharacterID"`
+			CharacterSelectionState string `json:"CharacterSelectionState"`
+			PregamePlayerState string `json:"PregamePlayerState"`
+			CompetetiveTier int `json:"CompetetiveTier"`
+			PlayerIdentity struct {
+				Subject string `json:"Subject"`
+				PlayerCardId string `json:"PlayerCardID"`
+				PlayerTitleId string `json:"PlayerTitleID"`
+				AccountLevel int `json:"AccountLevel"`
+				PreferredLevelBorderId string `json:"PreferredLevelBorderID"`
+				Incognito bool `json:"Incognito"`
+				HideAccountLevel bool `json:"HideAccountLevel"`
+			} `json:"PlayerIdentity"`
+			SeasonalBadgeInfo struct {
+				SeasonId string `json:"SeasonID"`
+				NumberOfWins int `json:"NumberOfWins"`
+				WinsByTier interface{} `json:"WinsByTier"`
+				Rank int `json:"Rank"`
+				LeaderboardRank int `json:"LeaderboardRank"`
+			} `json:"SeasonalBadgeInfo"`
+			IsCaptain bool `json:"IsCaptain"`
+		} `json:"Players"`
+	} `json:"Teams"`
+	AllyTeam struct {
+		TeamId string `json:"TeamID"`
+		Players []struct {
+			Subject string `json:"Subject"`
+			CharacterId string `json:"CharacterID"`
+			CharacterSelectionState string `json:"CharacterSelectionState"`
+			PregamePlayerState string `json:"PregamePlayerState"`
+			CompetetiveTier int `json:"CompetetiveTier"`
+			PlayerIdentity struct {
+				Subject string `json:"Subject"`
+				PlayerCardId string `json:"PlayerCardID"`
+				PlayerTitleId string `json:"PlayerTitleID"`
+				AccountLevel int `json:"AccountLevel"`
+				PreferredLevelBorderId string `json:"PreferredLevelBorderID"`
+				Incognito bool `json:"Incognito"`
+				HideAccountLevel bool `json:"HideAccountLevel"`
+			} `json:"PlayerIdentity"`
+			SeasonalBadgeInfo struct {
+				SeasonId string `json:"SeasonID"`
+				NumberOfWins int `json:"NumberOfWins"`
+				WinsByTier interface{} `json:"WinsByTier"`
+				Rank int `json:"Rank"`
+				LeaderboardRank int `json:"LeaderboardRank"`
+			} `json:"SeasonalBadgeInfo"`
+			IsCaptain bool `json:"IsCaptain"`
+		} `json:"Players"`
+	} `json:"AllyTeam"`
+	EnemyTeam interface{} `json:"EnemyTeam"`
+	ObserverSubjects interface{} `json:"ObserverSubjects"`
+	MatchCoaches interface{} `json:"MatchCoaches"`
+	EnemyTeamSize int `json:"EnemyTeamSize"`
+	EnemyTeamLockCount int `json:"EnemyTeamLockCount"`
+	PregameState string `json:"PregameState"`
+	LastUpdated string `json:"LastUpdated"`
+	MapId string `json:"MapID"`
+	MapSelectPool interface{} `json:"MapSelectPool"`
+	MapBannedIds interface{} `json:"MapBannedIDs"`
+	CastedVotes interface{} `json:"CastedVotes"`
+	MapSelectSteps interface{} `json:"MapSelectSteps"`
+	MapSelectStep int `json:"MapSelectStep"`
+	Team1 string `json:"Team1"`
+	GamePodId string `json:"GamePodID"`
+	Mode string `json:"Mode"`
+	VoiceSessionId string `json:"VoiceSessionID"`
+	MucName string `json:"MucName"`
+	QueueId string `json:"QueueID"`
+	ProvisioningFlowId string `json:"ProvisioningFlowID"`
+	IsRanked bool `json:"IsRanked"`
+	PhaseTimeRemainingNs int `json:"PhaseTimeRemainingNS"`
+	StepTimeRemainingNs int `json:"StepTimeRemainingNS"`
+	AltModesFlagAda bool `json:"AltModesFlagADA"`
+	TournamentMetadata interface{} `json:"TournamentMetadata"`
+	RosterMetadata interface{} `json:"RosterMetadata"`
+}
