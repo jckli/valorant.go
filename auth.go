@@ -1,3 +1,5 @@
+// Bit modified, but credit to fyraux (https://github.com/fyraux/go-rso)
+
 package valorant
 
 import (
@@ -25,7 +27,6 @@ var (
 	userRegion = ""
 )
 
-// Custom TLS dialer - Credit to fyraux (https://github.com/fyraux/go-rso)
 func dialTLS(network, addr string) (net.Conn, error) {
 	netConn, err := net.Dial(network, addr)
 	if err != nil {
