@@ -1,6 +1,6 @@
 # valorant.go
 
-> **disclaimer:** this wrapper is still a big work in progress and doesn't cover every endpoint yet. if you wanna contribute please make a pull request.
+> **disclaimer:** this wrapper is still a big work in progress and doesn't cover every endpoint yet. if you wanna contribute please make a pull request. also ngl this code is *really really* bad cuz im new to go so pls no flame.
 
 an API wrapper for VALORANT's client/unofficial API
 
