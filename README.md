@@ -1,5 +1,7 @@
 # valorant.go
 
+> **disclaimer:** this wrapper is still a big work in progress and doesn't cover every endpoint yet. if you wanna contribute please make a pull request.
+
 an API wrapper for VALORANT's client/unofficial API
 
 ## getting started
