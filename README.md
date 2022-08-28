@@ -14,10 +14,17 @@ go get github.com/jckli/valorant.go
 
 ## usage
 
-import the package into your project
+import the package into your project and then run auth
 
+example:
 ```go
 import "github.com/jckli/valorant.go"
+
+func main() {
+	puuid := valorant.Authentication("username", "password")
+	matchid, _ := valorant.Pregame_fetchPlayer(a)
+	pregame, _ := valorant.Pregame_fetchMatch(c)
+}
 ```
 
 
