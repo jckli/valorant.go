@@ -351,3 +351,13 @@ type PregameFetchMatchResp struct {
 	TournamentMetadata interface{} `json:"TournamentMetadata"`
 	RosterMetadata interface{} `json:"RosterMetadata"`
 }
+
+type PregameFetchMatchLoadoutsResp struct {
+	Loadouts []struct {
+		Sprays struct {
+			SpraySelections interface{} `json:"SpraySelections"`
+		} `json:"Sprays"`
+		Items interface{} `json:"Items"`
+	} `json:"Loadouts"`
+	LoadoutsValid bool `json:"LoadoutsValid"`
+}
