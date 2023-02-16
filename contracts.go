@@ -7,7 +7,7 @@ import (
 
 // GET ContractDefinitions_Fetch
 func Contracts_contractDefiniticions_fetch() (*ContractDefinitionsResp, error) {
-	resp, err := fetchGet("/contract-definitions/v3/item-upgrades", "pd")
+	resp, err := FetchGet("/contract-definitions/v3/item-upgrades", "pd")
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +21,7 @@ func Contracts_contractDefiniticions_fetch() (*ContractDefinitionsResp, error) {
 // GET Contracts_Fetch
 func Contracts_fetch(puuid string) (*ContractFetchResp, error) {
 	url := "/contracts/v1/contracts/" + puuid
-	resp, err := fetchGet(url, "pd")
+	resp, err := FetchGet(url, "pd")
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func Contracts_fetch(puuid string) (*ContractFetchResp, error) {
 // POST Contracts_Activate
 func Contracts_activate(puuid, contract_id string) (*ContractFetchResp, error) {
 	url := "/contracts/v1/contracts/" + puuid + "/special/" + contract_id
-	resp, err := fetchP(http.MethodPost, url, "pd", nil)
+	resp, err := FetchP(http.MethodPost, url, "pd", nil)
 	if err != nil {
 		return nil, err
 	}

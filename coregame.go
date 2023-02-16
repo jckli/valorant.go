@@ -9,7 +9,7 @@ import (
 // GET CoreGame_FetchAllChatMUCToken
 func Coregame_fetchAllChatMucToken(match_id string) (interface{}, error) {
 	url := "/core-game/v1/matches/" + match_id + "/allchatmuctoken"
-	resp, err := fetchGet(url, "glz")
+	resp, err := FetchGet(url, "glz")
 	if resp.StatusCode == 404 {
 		return "", fmt.Errorf("match not found")
 	} else if resp.StatusCode == 500 {
@@ -28,7 +28,7 @@ func Coregame_fetchAllChatMucToken(match_id string) (interface{}, error) {
 // GET CoreGame_FetchTeamChatMUCToken
 func Coregame_fetchTeamChatMucToken(match_id string) (interface{}, error) {
 	url := "/core-game/v1/matches/" + match_id + "/teamchatmuctoken"
-	resp, err := fetchGet(url, "glz")
+	resp, err := FetchGet(url, "glz")
 	if resp.StatusCode == 404 {
 		return "", fmt.Errorf("match not found")
 	} else if resp.StatusCode == 500 {
@@ -47,7 +47,7 @@ func Coregame_fetchTeamChatMucToken(match_id string) (interface{}, error) {
 // GET CoreGame_FetchMatch
 func Coregame_fetchMatch(match_id string) (*CoregameFetchMatchResp, error) {
 	url := "/core-game/v1/matches/" + match_id
-	resp, err := fetchGet(url, "glz")
+	resp, err := FetchGet(url, "glz")
 	if resp.Status == "404" {
 		return nil, fmt.Errorf("match not found")
 	}
@@ -64,7 +64,7 @@ func Coregame_fetchMatch(match_id string) (*CoregameFetchMatchResp, error) {
 // GET CoreGame_FetchMatchLoadouts
 func Coregame_fetchMatchLoadouts(match_id string) (*CoregameFetchMatchLoadoutsResp, error) {
 	url := "/core-game/v1/matches/" + match_id + "/loadouts"
-	resp, err := fetchGet(url, "glz")
+	resp, err := FetchGet(url, "glz")
 	if resp.Status == "404" {
 		return nil, fmt.Errorf("match not found")
 	}
@@ -81,7 +81,7 @@ func Coregame_fetchMatchLoadouts(match_id string) (*CoregameFetchMatchLoadoutsRe
 // GET CoreGame_FetchPlayer
 func Coregame_fetchPlayer(puuid string) (string, error) {
 	url := "/core-game/v1/players/" + puuid
-	resp, err := fetchGet(url, "glz")
+	resp, err := FetchGet(url, "glz")
 	if resp.StatusCode == 404 {
 		return "", fmt.Errorf("player not in a game")
 	}
@@ -98,7 +98,7 @@ func Coregame_fetchPlayer(puuid string) (string, error) {
 // POST CoreGame_DisassociatePlayer
 func Coregame_disassociatePlayer(puuid, match_id string) (*CoregameFetchPlayerResp, error) {
 	url := "/core-game/v1/players/" + puuid + "/disassociate/" + match_id
-	resp, err := fetchP(http.MethodPost, url, "glz", nil)
+	resp, err := FetchP(http.MethodPost, url, "glz", nil)
 	if resp.StatusCode == 404 {
 		return nil, fmt.Errorf("player not in a game")
 	}

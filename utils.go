@@ -23,7 +23,7 @@ func buildUrl(ep_type, region string) string {
 	}
 }
 
-func fetchGet(endpoint, ep_type string) (*http.Response, error) {
+func FetchGet(endpoint, ep_type string) (*http.Response, error) {
 	endpoints := map[string]bool {
 		"pd": true,
 		"glz": true,
@@ -44,7 +44,7 @@ func fetchGet(endpoint, ep_type string) (*http.Response, error) {
 	}
 }
 
-func fetchP(method, endpoint, ep_type string, body interface{}) (*http.Response, error) {
+func FetchP(method, endpoint, ep_type string, body interface{}) (*http.Response, error) {
 	endpoints := map[string]bool {
 		"pd": true,
 		"glz": true,
