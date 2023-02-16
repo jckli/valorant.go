@@ -8,6 +8,6 @@ import (
 func main() {
 	a := valorant.Authentication("email", "password")
 	fmt.Println(a)
-	b, _ := valorant.Contracts_fetch(a)
+	b, _ := valorant.Contracts_fetch(a.UserId)
 	fmt.Println(b.ProcessedMatches[0].Id)
 }
