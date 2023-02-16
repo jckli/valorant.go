@@ -17,7 +17,7 @@ var (
 	defaultHeaders = http.Header{
 		"Content-Type": {"application/json"},
 		"Cookie":       {""},
-		"User-Agent":   {"RiotClient/43.0.1.4195386.4190634 rso-auth (Windows; 10;;Professional, x64)"},
+		"User-Agent":   {"RiotClient/63.0.9.4909983.4789131 rso-auth (Windows; 10;;Professional, x64)"},
 	}
 	authHeaders = http.Header{}
 	tlsConfig   = tls.Config{
@@ -207,38 +207,48 @@ func getClientVersion() (string, error){
 	return body.Data.RiotClientVersion, nil
 }
 
-func Authentication(username, password string) string {
+type AuthBody struct {
+	UserId string 
+	Cookies string
+	Region string
+	AccessToken string
+}
+
+func Authentication(username, password string) *AuthBody {
 	authHeaders = defaultHeaders.Clone()
 	cookie, err := handshake()
 	if err != nil {
-		return ""
+		return nil
 	}
 	authHeaders.Set("Cookie", cookie)
 	parsedUri, cookie, err := login(username, password)
 	if err != nil {
-		return ""
+		return nil
 	}
 	authHeaders.Set("Cookie", cookie)
 	authHeaders.Set("Authorization", "Bearer " + parsedUri.AccessToken)
 	region, err := getRegion(parsedUri.IdToken)
-	userRegion = region
 	if err != nil {
-		return ""
+		return nil
 	}
 	token, err := getEntitlements()
 	if err != nil {
-		return ""
+		return nil
 	}
 	version, err := getClientVersion()
 	if err != nil {
-		return ""
+		return nil
 	}
 	authHeaders.Set("X-Riot-Entitlements-JWT", token)
 	authHeaders.Set("X-Riot-ClientVersion", version)
 	userId, err := getUserInfo()
 	if err != nil {
-		return ""
+		return nil
 	}
-
-	return userId
+	return &AuthBody{
+		UserId: userId,
+		Cookies: cookie,
+		Region: region,
+		AccessToken: parsedUri.AccessToken,
+	}
 }
