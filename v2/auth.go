@@ -211,37 +211,37 @@ func getClientVersion() (string, error){
 	return body.Data.RiotClientVersion, nil
 }
 
-func Authentication(username, password string) *AuthBody {
+func Authentication(username, password string) (*AuthBody, error ) {
 	authHeaders = defaultHeaders.Clone()
 	cookie, err := handshake()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	authHeaders.Set("Cookie", cookie)
 	parsedUri, cookie, err := login(username, password)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	authHeaders.Set("Cookie", cookie)
 	cookiesTotal := authHeaders.Get("Cookie")
 	authHeaders.Set("Authorization", "Bearer " + parsedUri.AccessToken)
 	region, err := getRegion(parsedUri.IdToken)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	token, err := getEntitlements()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	version, err := getClientVersion()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	authHeaders.Set("X-Riot-Entitlements-JWT", token)
 	authHeaders.Set("X-Riot-ClientVersion", version)
 	userId, err := getUserInfo()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	return &AuthBody{
 		Region: region,
@@ -250,5 +250,5 @@ func Authentication(username, password string) *AuthBody {
 		Cookies: cookiesTotal,
 		Token: token,
 		Version: version,
-	}
+	}, nil
 }
