@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net"
 	"net/url"
-	"fmt"
 	tls "github.com/refraction-networking/utls"
 )
 
@@ -54,10 +53,7 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
             }
 			fragment, _ := url.QueryUnescape(u.Fragment)
    			values, _ := url.ParseQuery(fragment)
-			fmt.Println("old access_token: " + auth.AccessToken)
 			auth.AccessToken = values.Get("access_token")
-			fmt.Println("new access_token: " + auth.AccessToken)
-			auth.Token = values.Get("id_token")
             return http.ErrUseLastResponse
         },
 	}
