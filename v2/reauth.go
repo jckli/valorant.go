@@ -44,7 +44,6 @@ func reauthDialTLS(network, addr string) (net.Conn, error) {
 }
 
 func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
-	queryParams := make(url.Values)
 	client := &http.Client{
 		Transport: &http.Transport{DialTLS: reauthDialTLS},
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -55,7 +54,10 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
             }
 			fragment, _ := url.QueryUnescape(u.Fragment)
    			values, _ := url.ParseQuery(fragment)
-            queryParams = values
+			fmt.Println("old access_token: " + auth.AccessToken)
+			auth.AccessToken = values.Get("access_token")
+			fmt.Println("new access_token: " + auth.AccessToken)
+			auth.Token = values.Get("id_token")
             return http.ErrUseLastResponse
         },
 	}
@@ -76,15 +78,9 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
 	}
 	defer resp.Body.Close()
 
-	access_token := queryParams.Get("access_token")
-	token :=  queryParams.Get("id_token")
-
-	fmt.Println("access_token: " + access_token)
-	fmt.Println("token: " + token)
-
 	return &AuthBody{
-		AccessToken: access_token,
-		Token: token,
+		AccessToken: auth.AccessToken,
+		Token: auth.Token,
 		Cookies: auth.Cookies,
 		Region: auth.Region,
 		Version: auth.Version,
