@@ -73,9 +73,6 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("failed to reauthenticate")
-	}
 	defer resp.Body.Close()
 
 	return &AuthBody{
