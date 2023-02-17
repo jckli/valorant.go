@@ -55,7 +55,6 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
             }
 			fragment, _ := url.QueryUnescape(u.Fragment)
    			values, _ := url.ParseQuery(fragment)
-			fmt.Println(values)
             queryParams = values
             return http.ErrUseLastResponse
         },
@@ -75,10 +74,17 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("failed to reauthenticate")
 	}
+	defer resp.Body.Close()
+
+	access_token := queryParams.Get("access_token")
+	token :=  queryParams.Get("id_token")
+
+	fmt.Println("access_token: " + access_token)
+	fmt.Println("token: " + token)
 
 	return &AuthBody{
-		AccessToken: queryParams.Get("access_token"),
-		Token: queryParams.Get("id_token"),
+		AccessToken: access_token,
+		Token: token,
 		Cookies: auth.Cookies,
 		Region: auth.Region,
 		Version: auth.Version,
