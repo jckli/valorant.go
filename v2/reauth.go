@@ -43,7 +43,12 @@ func reauthDialTLS(network, addr string) (net.Conn, error) {
 }
 
 func Reauthenticate(auth *AuthBody) (*http.Response, error) {
-	client := &http.Client{Transport: &http.Transport{DialTLS: reauthDialTLS}}
+	client := &http.Client{
+		Transport: &http.Transport{DialTLS: reauthDialTLS},
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+            return http.ErrUseLastResponse
+        },
+	}
 	req, err := http.NewRequest(http.MethodGet, "https://auth.riotgames.com/authorize?redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in&client_id=play-valorant-web-prod&response_type=token%20id_token&nonce=1", nil)
 	if err != nil {
 		return nil, err
