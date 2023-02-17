@@ -53,7 +53,10 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
             if err != nil {
                 return err
             }
-            queryParams = u.Query()
+			fragment, _ := url.QueryUnescape(u.Fragment)
+   			values, _ := url.ParseQuery(fragment)
+			fmt.Println(values)
+            queryParams = values
             return http.ErrUseLastResponse
         },
 	}
@@ -65,7 +68,6 @@ func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
 	reauthHeaders.Set("Cookie", auth.Cookies)
 	reauthHeaders.Set("Referer", req.URL.Host)
 	req.Header = reauthHeaders.Clone()
-	fmt.Println(req.Header)
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
