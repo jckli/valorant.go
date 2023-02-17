@@ -3,6 +3,7 @@ package val
 import (
 	"net/http"
 	"net"
+	"net/url"
 	"fmt"
 	tls "github.com/refraction-networking/utls"
 )
@@ -42,10 +43,17 @@ func reauthDialTLS(network, addr string) (net.Conn, error) {
 	return tlsConn, nil
 }
 
-func Reauthenticate(auth *AuthBody) (*http.Response, error) {
+func Reauthenticate(auth *AuthBody) (*AuthBody, error) {
+	queryParams := make(url.Values)
 	client := &http.Client{
 		Transport: &http.Transport{DialTLS: reauthDialTLS},
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+            redirectUrl := req.URL.String()
+            u, err := url.Parse(redirectUrl)
+            if err != nil {
+                return err
+            }
+            queryParams = u.Query()
             return http.ErrUseLastResponse
         },
 	}
@@ -58,5 +66,20 @@ func Reauthenticate(auth *AuthBody) (*http.Response, error) {
 	reauthHeaders.Set("Referer", req.URL.Host)
 	req.Header = reauthHeaders.Clone()
 	fmt.Println(req.Header)
-	return client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("failed to reauthenticate")
+	}
+
+	return &AuthBody{
+		AccessToken: queryParams.Get("access_token"),
+		Token: queryParams.Get("id_token"),
+		Cookies: auth.Cookies,
+		Region: auth.Region,
+		Version: auth.Version,
+		Puuid: auth.Puuid,
+	}, nil
 }
