@@ -3,15 +3,17 @@ package val
 import (
 	"net/http"
 	"net"
+	"fmt"
 	tls "github.com/refraction-networking/utls"
 )
 
 var (
-	reauthHeaders = http.Header{
+	reauthDefaultHeaders = http.Header{
 		"Content-Type": {"application/json"},
 		"Cookie":       {""},
 		"User-Agent":   {""},
 	}
+	reauthHeaders = http.Header{}
 	reauthTlsConfig = tls.Config{
 		CipherSuites: []uint16{tls.TLS_AES_128_GCM_SHA256},
 		MinVersion:   tls.VersionTLS13,
@@ -46,8 +48,10 @@ func Reauthenticate(auth *AuthBody) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	reauthHeaders = reauthDefaultHeaders.Clone()
 	reauthHeaders.Set("Cookie", auth.Cookies)
 	reauthHeaders.Set("Referer", req.URL.Host)
-	req.Header = reauthHeaders
+	req.Header = reauthHeaders.Clone()
+	fmt.Println(req.Header)
 	return client.Do(req)
 }
