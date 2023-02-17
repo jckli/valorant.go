@@ -185,11 +185,6 @@ func getRegion(id_token string) (string, error) {
 		return "", nil
 	}
 	defer resp.Body.Close()
-	buf := new(bytes.Buffer)
-    buf.ReadFrom(resp.Body)
-    newStr := buf.String()
-
-	fmt.Println("dadkjnawkjdnkawdn: " + newStr)
 	body := new(RegionResp)
 	json.NewDecoder(resp.Body).Decode(body)
 
