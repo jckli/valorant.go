@@ -1,8 +1,8 @@
 # valorant.go
 
-> **disclaimer:** this wrapper is still a big work in progress and doesn't cover every endpoint yet. if you wanna contribute please make a pull request. also ngl this code is *really really* bad cuz im new to go so pls no flame.
+> **disclaimer:** this wrapper is still a big work in progress and doesn't cover every endpoint yet. use at own risk.
 
-an API wrapper for VALORANT's client/unofficial API
+an golang API wrapper for VALORANT's client/unofficial API written with fasthttp
 
 ## getting started
 
@@ -16,19 +16,25 @@ go get github.com/jckli/valorant.go
 
 ## usage
 
-import the package into your project and then run auth
+import the package into your project and then login to a valorant account.
 
 example:
+
 ```go
-import "github.com/jckli/valorant.go"
+import (
+    "github.com/jckli/valorant.go"
+    "github.com/jckli/valorant.go/game"
+)
 
 func main() {
-	puuid := valorant.Authentication("username", "password")
-	matchid, _ := valorant.Pregame_fetchPlayer(a)
-	pregame, _ := valorant.Pregame_fetchMatch(c)
+	client, err := valorant.New("username", "password")
+    if err != nil {
+        panic(err)
+    }
+    playerGame, _ := game.GetPlayerGame(client, client.UserInfo.UserId)
+    gameInfo, _ := game.GetGameInfo(client, playerGame.MatchID)
 }
 ```
-
 
 ## notes
 
