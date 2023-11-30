@@ -16,12 +16,12 @@ var (
 )
 
 func buildUrl(ep_type, region string) string {
+	if region == "" {
+		region = "na"
+	}
 	shard := region
 	if (region == "latam") || (region == "br") {
 		shard = "na"
-	}
-	if region == "" {
-		region = "na"
 	}
 	if ep_type == "pd" {
 		return "https://pd." + region + ".a.pvp.net"

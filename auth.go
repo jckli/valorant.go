@@ -112,6 +112,10 @@ type userInfoResp struct {
 	} `json:"affinity"`
 }
 
+type regionReq struct {
+	IdToken string `json:"id_token"`
+}
+
 type regionResp struct {
 	PasToken   string `json:"token"`
 	Affinities struct {
@@ -347,9 +351,9 @@ func (a *Auth) getUser() (ok bool) {
 }
 
 func (a *Auth) getRegion() (ok bool) {
-	body, ok := a.httpRequest("PUT", "https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant", struct {
-		IdToken string `json:"id_token"`
-	}{a.IdToken})
+	body, ok := a.httpRequest("PUT", "https://riot-geo.pas.si.riotgames.com/pas/v1/product/valorant", regionReq{
+		IdToken: a.IdToken,
+	})
 	if !ok {
 		return false
 	}
@@ -398,13 +402,15 @@ func New(username, password string) (*Auth, error) {
 	if !ok {
 		return nil, fmt.Errorf("could not login")
 	}
-	authHeaders["Cookie"] = cookie
-	auth.CookieJar = cookie
+	delete(authHeaders, "Cookie")
 	authHeaders["Authorization"] = fmt.Sprintf("Bearer %s", auth.AccessToken)
 
 	if ok := auth.getRegion(); !ok {
 		return nil, fmt.Errorf("could not get region")
 	}
+
+	authHeaders["Cookie"] = cookie
+	auth.CookieJar = cookie
 
 	if ok := auth.getEntitlements(); !ok {
 		return nil, fmt.Errorf("could not get entitlements")
