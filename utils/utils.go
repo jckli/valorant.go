@@ -34,7 +34,7 @@ func buildUrl(ep_type, region string) string {
 	}
 }
 
-func getRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
+func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 	endpoints := map[string]bool{
 		"pd":     true,
 		"glz":    true,
