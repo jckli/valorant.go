@@ -57,6 +57,7 @@ type ContractsResponse struct {
 	} `json:"MissionMetadata"`
 }
 
+// Get contract details including agents, battlepass, missions, and recent games
 func GetContracts(a *valorant.Auth, puuid string) (*ContractsResponse, error) {
 	resp, err := utils.GetRequest("/contracts/v1/contracts/"+puuid, "pd", a)
 	if err != nil {

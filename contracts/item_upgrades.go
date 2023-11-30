@@ -62,6 +62,7 @@ type ItemUpgradesResponse struct {
 	} `json:"Definitions"`
 }
 
+// Get details for item upgrades
 func GetItemUpgrades(a *valorant.Auth) (*ItemUpgradesResponse, error) {
 	resp, err := utils.GetRequest("/contract-definitions/v3/item-upgrades", "pd", a)
 	if err != nil {

@@ -384,6 +384,7 @@ func (a *Auth) getClientVersion() (ok bool) {
 	return true
 }
 
+// Login to the Riot Games API
 func New(username, password string) (*Auth, error) {
 	client := createClient()
 	auth := &Auth{

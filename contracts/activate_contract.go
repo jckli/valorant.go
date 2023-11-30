@@ -61,6 +61,7 @@ type ActivateContractResponse struct {
 	} `json:"MissionMetadata"`
 }
 
+// Activate a specific contract by ID
 func PostActivateContract(a *valorant.Auth, puuid, contractId string) (*ActivateContractResponse, error) {
 	resp, err := utils.PostRequest("/contracts/v1/contracts/"+puuid+"/special/"+contractId, "pd", a)
 	if err != nil {

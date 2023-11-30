@@ -12,6 +12,7 @@ type CurrentGamePlayerResponse struct {
 	Version int    `json:"Version"`
 }
 
+// Get the current game match ID for the provided player
 func GetPlayerGame(a *valorant.Auth, puuid string) (*CurrentGamePlayerResponse, error) {
 	resp, err := utils.GetRequest("/core-game/v1/players/"+puuid, "glz", a)
 	if err != nil {
