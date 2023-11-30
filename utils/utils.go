@@ -63,3 +63,61 @@ func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		return nil, fmt.Errorf("invalid endpoint type")
 	}
 }
+
+func PostRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
+	endpoints := map[string]bool{
+		"pd":  true,
+		"glz": true,
+	}
+	if endpoints[ep_type] {
+		url := buildUrl(ep_type, a.Region)
+		req := fasthttp.AcquireRequest()
+		req.Header.SetMethod("POST")
+		req.Header.SetRequestURI(url + endpoint)
+		for k, v := range defaultHeaders {
+			req.Header.Set(k, v)
+		}
+		req.Header.Set("Cookie", a.CookieJar)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.AccessToken))
+		req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
+		req.Header.Set("X-Riot-ClientVersion", a.Version)
+		req.Header.SetBytesV("Referer", req.URI().Host())
+		resp := fasthttp.AcquireResponse()
+		err := a.Client.Do(req, resp)
+		if err != nil {
+			return nil, err
+		}
+		return resp.Body(), nil
+	} else {
+		return nil, fmt.Errorf("invalid endpoint type")
+	}
+}
+
+func PutRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
+	endpoints := map[string]bool{
+		"pd":  true,
+		"glz": true,
+	}
+	if endpoints[ep_type] {
+		url := buildUrl(ep_type, a.Region)
+		req := fasthttp.AcquireRequest()
+		req.Header.SetMethod("PUT")
+		req.Header.SetRequestURI(url + endpoint)
+		for k, v := range defaultHeaders {
+			req.Header.Set(k, v)
+		}
+		req.Header.Set("Cookie", a.CookieJar)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.AccessToken))
+		req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
+		req.Header.Set("X-Riot-ClientVersion", a.Version)
+		req.Header.SetBytesV("Referer", req.URI().Host())
+		resp := fasthttp.AcquireResponse()
+		err := a.Client.Do(req, resp)
+		if err != nil {
+			return nil, err
+		}
+		return resp.Body(), nil
+	} else {
+		return nil, fmt.Errorf("invalid endpoint type")
+	}
+}
