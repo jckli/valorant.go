@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func GenerateRandomBytes(n int) ([]byte, error) {
+func generateRandomBytes(n int) ([]byte, error) {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
 	// Note that err == nil only if we read len(b) bytes.
@@ -24,7 +24,7 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 }
 
 func generateRandomStringURLSafe(n int) string {
-	b, _ := GenerateRandomBytes(n)
+	b, _ := generateRandomBytes(n)
 	return base64.URLEncoding.EncodeToString(b)
 }
 
