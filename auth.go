@@ -22,7 +22,7 @@ func generateRandomBytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-func generateRandomStringURLSafe(n int) string {
+func GenerateRandomStringURLSafe(n int) string {
 	b, _ := generateRandomBytes(n)
 	return base64.URLEncoding.EncodeToString(b)
 }
@@ -31,7 +31,7 @@ var (
 	defaultHeaders = map[string]string{
 		"Content-Type":  "application/json",
 		"Cache-Control": "no-cache",
-		"User-Agent":    generateRandomStringURLSafe(111),
+		"User-Agent":    GenerateRandomStringURLSafe(111),
 	}
 	authHeaders = map[string]string{}
 	tlsConfig   = &tls.Config{
@@ -42,6 +42,7 @@ var (
 
 type Auth struct {
 	Client      *fasthttp.Client
+	CookieJar   string
 	Region      string
 	AccessToken string
 	IdToken     string
@@ -217,7 +218,7 @@ func (a *Auth) getTokens(uri string) (ok bool) {
 func (a *Auth) handshake() (cookie string, ok bool) {
 	body := handshakeBody{
 		ClientID:     "play-valorant-web-prod",
-		Nonce:        generateRandomStringURLSafe(16),
+		Nonce:        GenerateRandomStringURLSafe(16),
 		RedirectURI:  "https://playvalorant.com/opt_in",
 		ResponseType: "token id_token",
 		Scope:        "account openid",
@@ -398,6 +399,7 @@ func New(username, password string) (*Auth, error) {
 		return nil, fmt.Errorf("could not login")
 	}
 	authHeaders["Cookie"] = cookie
+	auth.CookieJar = cookie
 	authHeaders["Authorization"] = fmt.Sprintf("Bearer %s", auth.AccessToken)
 
 	if ok := auth.getRegion(); !ok {
