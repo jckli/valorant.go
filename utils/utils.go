@@ -15,7 +15,7 @@ var (
 	}
 )
 
-func buildUrl(ep_type, region string) string {
+func BuildUrl(ep_type, region string) string {
 	if region == "" {
 		region = "na"
 	}
@@ -24,7 +24,7 @@ func buildUrl(ep_type, region string) string {
 		shard = "na"
 	}
 	if ep_type == "pd" {
-		return "https://pd." + region + ".a.pvp.net"
+		return "https://pd." + shard + ".a.pvp.net"
 	} else if ep_type == "glz" {
 		return "https://glz-" + region + "-1." + shard + ".a.pvp.net"
 	} else if ep_type == "shared" {
@@ -41,7 +41,7 @@ func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		"shared": true,
 	}
 	if endpoints[ep_type] {
-		url := buildUrl(ep_type, a.Region)
+		url := BuildUrl(ep_type, a.Region)
 		req := fasthttp.AcquireRequest()
 		req.Header.SetMethod("GET")
 		req.Header.SetRequestURI(url + endpoint)
@@ -58,6 +58,7 @@ func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		return resp.Body(), nil
 	} else {
 		return nil, fmt.Errorf("invalid endpoint type")
@@ -70,7 +71,7 @@ func PostRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		"glz": true,
 	}
 	if endpoints[ep_type] {
-		url := buildUrl(ep_type, a.Region)
+		url := BuildUrl(ep_type, a.Region)
 		req := fasthttp.AcquireRequest()
 		req.Header.SetMethod("POST")
 		req.Header.SetRequestURI(url + endpoint)
@@ -99,7 +100,7 @@ func PutRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		"glz": true,
 	}
 	if endpoints[ep_type] {
-		url := buildUrl(ep_type, a.Region)
+		url := BuildUrl(ep_type, a.Region)
 		req := fasthttp.AcquireRequest()
 		req.Header.SetMethod("PUT")
 		req.Header.SetRequestURI(url + endpoint)
