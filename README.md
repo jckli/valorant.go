@@ -21,6 +21,8 @@ import the package into your project and then login to a valorant account.
 example:
 
 ```go
+package main
+
 import (
     "github.com/jckli/valorant.go"
     "github.com/jckli/valorant.go/game"
