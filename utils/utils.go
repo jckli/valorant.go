@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/jckli/valorant.go"
 	"github.com/valyala/fasthttp"
@@ -112,6 +113,39 @@ func PutRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
 		req.Header.Set("X-Riot-ClientVersion", a.Version)
 		req.Header.SetBytesV("Referer", req.URI().Host())
+		resp := fasthttp.AcquireResponse()
+		err := a.Client.Do(req, resp)
+		if err != nil {
+			return nil, err
+		}
+		return resp.Body(), nil
+	} else {
+		return nil, fmt.Errorf("invalid endpoint type")
+	}
+}
+
+func PutBodyRequest(endpoint, ep_type string, a *valorant.Auth, body interface{}) ([]byte, error) {
+	endpoints := map[string]bool{
+		"pd":  true,
+		"glz": true,
+	}
+	if endpoints[ep_type] {
+		url := BuildUrl(ep_type, a.Region)
+		req := fasthttp.AcquireRequest()
+		req.Header.SetMethod("PUT")
+		req.Header.SetRequestURI(url + endpoint)
+		for k, v := range defaultHeaders {
+			req.Header.Set(k, v)
+		}
+		req.Header.Set("Cookie", a.CookieJar)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.AccessToken))
+		req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
+		req.Header.Set("X-Riot-ClientVersion", a.Version)
+		req.Header.SetBytesV("Referer", req.URI().Host())
+		if body != nil {
+			bodyBytes, _ := json.Marshal(body)
+			req.SetBody(bodyBytes)
+		}
 		resp := fasthttp.AcquireResponse()
 		err := a.Client.Do(req, resp)
 		if err != nil {

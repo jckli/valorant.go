@@ -21,32 +21,8 @@ type MatchHistoryResponse struct {
 	} `json:"History"`
 }
 
-type MatchHistoryOptionalParams struct {
-	startIndex int
-	endIndex   int
-	queue      string
-}
-
-func WithStartIndex(startIndex int) func(*MatchHistoryOptionalParams) {
-	return func(m *MatchHistoryOptionalParams) {
-		m.startIndex = startIndex
-	}
-}
-
-func WithEndIndex(endIndex int) func(*MatchHistoryOptionalParams) {
-	return func(m *MatchHistoryOptionalParams) {
-		m.endIndex = endIndex
-	}
-}
-
-func WithQueue(queue string) func(*MatchHistoryOptionalParams) {
-	return func(m *MatchHistoryOptionalParams) {
-		m.queue = queue
-	}
-}
-
-func GetMatchHistory(a *valorant.Auth, puuid string, opts ...func(*MatchHistoryOptionalParams)) (*MatchHistoryResponse, error) {
-	params := MatchHistoryOptionalParams{}
+func GetMatchHistory(a *valorant.Auth, puuid string, opts ...func(*PvpOptionalParams)) (*MatchHistoryResponse, error) {
+	params := PvpOptionalParams{}
 	for _, opt := range opts {
 		opt(&params)
 	}
@@ -66,7 +42,6 @@ func GetMatchHistory(a *valorant.Auth, puuid string, opts ...func(*MatchHistoryO
 	if eP != "" {
 		url += "?" + eP
 	}
-	fmt.Println(url)
 
 	resp, err := utils.GetRequest(url, "pd", a)
 	if err != nil {
