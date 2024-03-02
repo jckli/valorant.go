@@ -437,12 +437,13 @@ func (a *Auth) Reauth() bool {
 	req.SetRequestURI("https://auth.riotgames.com/authorize?redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in&client_id=play-valorant-web-prod&response_type=token%20id_token&nonce=1")
 
 	reauthHeaders := defaultHeaders
-	reauthHeaders["Cookie"] = a.CookieJar
-	reauthHeaders["X-Riot-Entitlements-JWT"] = a.Token
-	reauthHeaders["X-Riot-ClientVersion"] = a.Version
 	for k, v := range reauthHeaders {
 		req.Header.Add(k, v)
 	}
+	req.Header.Set("Cookie", a.CookieJar)
+	req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
+	req.Header.Set("X-Riot-ClientVersion", a.Version)
+
 	req.Header.AddBytesV("Referer", req.URI().Host())
 
 	resp := fasthttp.AcquireResponse()
@@ -459,7 +460,6 @@ func (a *Auth) Reauth() bool {
 	if location == nil {
 		return false
 	}
-	fmt.Println(string(location))
 
 	if ok := a.getTokens(string(location)); !ok {
 		return false
