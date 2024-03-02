@@ -412,7 +412,6 @@ func New(username, password string) (*Auth, error) {
 
 	authHeaders["Cookie"] = cookie
 	auth.CookieJar = cookie
-	fmt.Println(auth.CookieJar)
 
 	if ok := auth.getEntitlements(); !ok {
 		return nil, fmt.Errorf("could not get entitlements")
@@ -436,7 +435,12 @@ func (a *Auth) Reauth() bool {
 	defer fasthttp.ReleaseRequest(req)
 	req.Header.SetMethod("GET")
 	req.SetRequestURI("https://auth.riotgames.com/authorize?redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in&client_id=play-valorant-web-prod&response_type=token%20id_token&nonce=1")
-	for k, v := range authHeaders {
+
+	reauthHeaders := defaultHeaders
+	reauthHeaders["Cookie"] = a.CookieJar
+	reauthHeaders["X-Riot-Entitlements-JWT"] = a.Token
+	reauthHeaders["X-Riot-ClientVersion"] = a.Version
+	for k, v := range reauthHeaders {
 		req.Header.Add(k, v)
 	}
 	req.Header.AddBytesV("Referer", req.URI().Host())
@@ -455,10 +459,25 @@ func (a *Auth) Reauth() bool {
 	if location == nil {
 		return false
 	}
+	fmt.Println(string(location))
 
 	if ok := a.getTokens(string(location)); !ok {
 		return false
 	}
 
 	return true
+}
+
+func CreateAuth(cookieJar, region, accessToken, idToken, expiresIn, token, version string) *Auth {
+	return &Auth{
+		Client:      createClient(),
+		CookieJar:   cookieJar,
+		Region:      region,
+		AccessToken: accessToken,
+		IdToken:     idToken,
+		ExpiresIn:   expiresIn,
+		Token:       token,
+		Version:     version,
+		UserInfo:    userInfoResp{},
+	}
 }
