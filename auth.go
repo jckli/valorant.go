@@ -412,6 +412,7 @@ func New(username, password string) (*Auth, error) {
 
 	authHeaders["Cookie"] = cookie
 	auth.CookieJar = cookie
+	fmt.Println(auth.CookieJar)
 
 	if ok := auth.getEntitlements(); !ok {
 		return nil, fmt.Errorf("could not get entitlements")
@@ -428,4 +429,36 @@ func New(username, password string) (*Auth, error) {
 	}
 
 	return auth, nil
+}
+
+func (a *Auth) Reauth() bool {
+	req := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(req)
+	req.Header.SetMethod("GET")
+	req.SetRequestURI("https://auth.riotgames.com/authorize?redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in&client_id=play-valorant-web-prod&response_type=token%20id_token&nonce=1")
+	for k, v := range authHeaders {
+		req.Header.Add(k, v)
+	}
+	req.Header.AddBytesV("Referer", req.URI().Host())
+
+	resp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseResponse(resp)
+	err := a.Client.Do(req, resp)
+	if err != nil {
+		return false
+	}
+
+	if resp.StatusCode() != 303 {
+		return false
+	}
+	location := resp.Header.Peek("Location")
+	if location == nil {
+		return false
+	}
+
+	if ok := a.getTokens(string(location)); !ok {
+		return false
+	}
+
+	return true
 }
