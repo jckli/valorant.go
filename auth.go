@@ -453,6 +453,8 @@ func (a *Auth) Reauth() bool {
 		return false
 	}
 
+	fmt.Println(resp.StatusCode())
+
 	if resp.StatusCode() != 303 {
 		return false
 	}
@@ -460,6 +462,8 @@ func (a *Auth) Reauth() bool {
 	if location == nil {
 		return false
 	}
+
+	fmt.Println(string(location))
 
 	if ok := a.getTokens(string(location)); !ok {
 		return false
