@@ -54,14 +54,11 @@ func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		req.Header.Set("X-Riot-Entitlements-JWT", a.Token)
 		req.Header.Set("X-Riot-ClientVersion", a.Version)
 		req.Header.SetBytesV("Referer", req.URI().Host())
-		fmt.Println("All headers: ", req.Header.String())
 		resp := fasthttp.AcquireResponse()
 		err := a.Client.Do(req, resp)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(resp.StatusCode())
-		fmt.Println(string(resp.Body()))
 
 		return resp.Body(), nil
 	} else {
