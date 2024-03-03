@@ -335,7 +335,7 @@ func (a *Auth) getEntitlements() (ok bool) {
 	return true
 }
 
-func (a *Auth) getUser() (ok bool) {
+func (a *Auth) GetUser() (ok bool) {
 	body, ok := a.httpRequest("POST", "https://auth.riotgames.com/userinfo", nil)
 	if !ok {
 		return false
@@ -423,7 +423,7 @@ func New(username, password string) (*Auth, error) {
 	}
 	authHeaders["X-Riot-ClientVersion"] = auth.Version
 
-	if ok := auth.getUser(); !ok {
+	if ok := auth.GetUser(); !ok {
 		return nil, fmt.Errorf("could not get user")
 	}
 
@@ -472,8 +472,8 @@ func (a *Auth) Reauth() bool {
 	return true
 }
 
-func CreateAuth(cookieJar, region, accessToken, idToken, expiresIn, token, version string) *Auth {
-	return &Auth{
+func CreateAuth(cookieJar, region, accessToken, idToken, expiresIn, token, version string) (*Auth, error) {
+	auth := &Auth{
 		Client:      createClient(),
 		CookieJar:   cookieJar,
 		Region:      region,
@@ -484,4 +484,17 @@ func CreateAuth(cookieJar, region, accessToken, idToken, expiresIn, token, versi
 		Version:     version,
 		UserInfo:    userInfoResp{},
 	}
+
+	authHeaders = defaultHeaders
+	authHeaders["Cookie"] = cookieJar
+	authHeaders["Authorization"] = fmt.Sprintf("Bearer %s", accessToken)
+	authHeaders["X-Riot-Entitlements-JWT"] = token
+	authHeaders["X-Riot-ClientVersion"] = version
+
+	if ok := auth.GetUser(); !ok {
+		return nil, fmt.Errorf("could not get user")
+	}
+
+	return auth, nil
+
 }
