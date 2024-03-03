@@ -59,6 +59,8 @@ func GetRequest(endpoint, ep_type string, a *valorant.Auth) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+		fmt.Println(resp.StatusCode())
+		fmt.Println(resp.Body())
 
 		return resp.Body(), nil
 	} else {
