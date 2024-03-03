@@ -465,6 +465,10 @@ func (a *Auth) Reauth() bool {
 		return false
 	}
 
+	if a.AccessToken == "" || a.IdToken == "" || a.ExpiresIn == "" {
+		return false
+	}
+
 	return true
 }
 
